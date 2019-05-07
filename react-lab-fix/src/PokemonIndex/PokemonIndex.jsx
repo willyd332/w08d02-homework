@@ -6,18 +6,32 @@ function PokemonIndex(props){
   const [pokemon, setPokemon] = useState([])
 
   const getPokemon = async (searchParam) => {
-    const searchUrl = `https://pokeapi.co/api/v2/pokemon/${searchParam}/`
+    const searchUrl = `https://pokeapi.co/api/v2/pokemon/${searchParam}`
     const foundPokes = await fetch(searchUrl)
+    const parsedResults = await foundPokes.json();
+    console.log(parsedResults)
     if (searchParam === ''){
-      setPokemon(foundPokes.results)
+      setPokemon(parsedResults.results)
     } else {
-      setPokemon([foundPokes])
+      setPokemon([parsedResults])
     }
   }
+  console.log(pokemon)
   const pokeList = pokemon.map((poke) =>
     <li key={poke.id}>
       <h3>{poke.name}</h3>
-      <p>Weight: {poke.weight} Attack: {poke.moves[0].move.name}</p>
+      {poke.moves ?
+        <div>
+          <p>Weight: {poke.weight}</p>
+          <ol> <h3>Attacks:</h3>
+            {poke.moves.map((move)=>
+              <li>{move.move.name}</li>
+            )}
+          </ol>
+        </div>
+      :
+      <button onClick={()=>getPokemon(poke.name)}>GET MORE DATA</button>
+      }
     </li>
   )
   return(
@@ -31,4 +45,4 @@ function PokemonIndex(props){
 
 
 
-export default PokemonForm
+export default PokemonIndex
