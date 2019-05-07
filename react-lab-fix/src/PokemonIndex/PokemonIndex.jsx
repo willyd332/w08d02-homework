@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
-import PokemonForm from './PokemonForm.jsx'
+import PokemonForm from './PokemonForm/PokemonForm.jsx'
 
 function PokemonIndex(props){
 
   const [pokemon, setPokemon] = useState([])
 
-  function getPokemon(searchParam){
-    console.log("this is defined")
+  const getPokemon = async (searchParam) => {
+    const searchUrl = `https://pokeapi.co/api/v2/pokemon/${searchParam}/`
+    const foundPokes = await fetch(searchUrl)
+    if (searchParam === ''){
+      setPokemon(foundPokes.results)
+    } else {
+      setPokemon([foundPokes])
+    }
   }
   const pokeList = pokemon.map((poke) =>
     <li key={poke.id}>
